@@ -1,0 +1,3 @@
+package: github.com/protograph/protographer
+import:
+- package: github.com/protograph/protographer/templates/pgfumlsd
