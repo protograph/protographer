@@ -5,7 +5,7 @@ actor:
 sequence:
 - A:
     B:
-      label: "$g$, $p$, A"
+      label: "$g$, $p$, $A$"
       textFrom: "$A = g^a$ mod $p$"
       textTo: "$B = g^b$ mod $p$"
 
