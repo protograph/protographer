@@ -17,23 +17,6 @@ var (
 	outDir = flag.String("out", "tex", "output directory")
 )
 
-//type Protograph struct {
-//	Title    string
-//	Actor    []map[string]string
-//	Sequence []map[string]map[string]interface{} // Sequence is an array of this form (Src: { Dst: Label })
-//}
-//
-//func (p *Protograph) GenerateMermaid() {
-//	tmpl, _ := template.New("mermaid").Parse(mermaidTemplate)
-//	tmpl.Execute(os.Stdout, p)
-//}
-//
-//func (p *Protograph) GeneratePGFUMLSD(wr io.Writer) {
-//	tmpl, _ := template.New("pgfumlsd").Delims("((", "))").
-//		Parse(pgfumlsdTemplate)
-//	tmpl.Execute(wr, p)
-//}
-
 func main() {
 
 	flag.Parse()
@@ -60,10 +43,7 @@ func main() {
 
 		p := protographer.New(&data)
 
-		//fmt.Println("===MermaidJS===")
-		//protograph.GenerateMermaid()
-
-		fmt.Printf("PGF-UMLSD: %s\n", file.Name())
+		fmt.Printf("Converting %s to TeX with PGF-UMLSD.\n", file.Name())
 		out, _ := os.Create(*outDir + "/" + baseName + ".tex")
 		defer out.Close()
 

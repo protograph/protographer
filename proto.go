@@ -59,10 +59,15 @@ func New(y *ProtographYAML) *Protograph {
 				p.Sequence[i].Destination = k2
 				switch v3 := v2.(type) {
 				case map[interface{}]interface{}:
-					fmt.Println(v3["textFrom"])
-					p.Sequence[i].Label = v3["label"].(string)
-					p.Sequence[i].AnnotationFrom = v3["textFrom"].(string)
-					p.Sequence[i].AnnotationTo = v3["textTo"].(string)
+					if s, ok := v3["arrow"].(string); ok {
+						p.Sequence[i].Label = s
+					}
+					if s, ok := v3["from"].(string); ok {
+						p.Sequence[i].AnnotationFrom = s
+					}
+					if s, ok := v3["to"].(string); ok {
+						p.Sequence[i].AnnotationTo = s
+					}
 				case string:
 					p.Sequence[i].Label = v3
 				case int:
