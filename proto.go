@@ -68,6 +68,9 @@ func New(y *ProtographYAML) *Protograph {
 					if s, ok := v3["to"].(string); ok {
 						p.Sequence[i].AnnotationTo = s
 					}
+					if s, ok := v3["time"].(int); ok {
+						p.Sequence[i].Delay = s
+					}
 				case string:
 					p.Sequence[i].Label = v3
 				case int:

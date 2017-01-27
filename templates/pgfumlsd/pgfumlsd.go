@@ -138,9 +138,14 @@ const theTemplate = `
 
 	##- $actorList := .ActorList ##
 	##- range .Sequence ##
+  ##- if eq .Source "EMPTYLINE" ##
+  \postlevel
+  ##- else ##
 	\mess[## .Delay ##]{## .Source ##}{## expandEOL .Label ##}{## .Destination ##}
 	\node [anchor=## anchor $actorList .Source .Destination "from"  ##] at (mess from) {## expandEOL .AnnotationFrom ##};
 	\node [anchor=## anchor $actorList .Source .Destination "to"  ##] at (mess to) {## expandEOL .AnnotationTo ##};
+  ##- end ##
+
 	##- end##
 
 ##- end ##
