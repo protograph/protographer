@@ -1,0 +1,11 @@
+title: Hello World
+
+actor:
+- A: Alice
+- B: Bob
+- C: Carol
+
+sequence:
+- A: {B: hello}
+- B: {C: world}
+- C: {A: "let's show text in math: $ `K`_`receiver` $ !"}
