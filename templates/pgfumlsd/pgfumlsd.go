@@ -9,6 +9,7 @@ import (
 
 func expand(a string) string {
 
+	a = strings.TrimSpace(a)
 	// expand EOL to \n and shortstack
 	if strings.Contains(a, "\n") {
 		a = fmt.Sprintf("\\shortstack[l]{%s}", strings.Replace(a, "\n", "\\\\", -1))
@@ -19,6 +20,8 @@ func expand(a string) string {
 	a = re.ReplaceAllStringFunc(a, func(s string) string {
 		re2 := regexp.MustCompile("[`]([^`]*)[`]")
 		s = re2.ReplaceAllString(s, "\\mathsf{$1}")
+		s = strings.Replace(s, "<-", `\gets`, -1)
+		s = strings.Replace(s, "->", `\to`, -1)
 		return s
 	})
 
