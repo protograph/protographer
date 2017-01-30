@@ -4,12 +4,24 @@ import (
 	"fmt"
 	"strings"
 	"text/template"
+	"regexp"
 )
 
-func expandEOL(a string) string {
+func expand(a string) string {
+
+	// expand EOL to \n and shortstack
 	if strings.Contains(a, "\n") {
-		return fmt.Sprintf("\\shortstack{%s}", strings.Replace(a, "\n", "\\\\", -1))
+		a = fmt.Sprintf("\\shortstack{%s}", strings.Replace(a, "\n", "\\\\", -1))
 	}
+
+	// expand $ `...` $ to $ \textsf{...}
+	re := regexp.MustCompile("[$][^$]*[$]")
+	a = re.ReplaceAllStringFunc(a, func (s string) string {
+		re2 := regexp.MustCompile("[`]([^`]*)[`]")
+		s = re2.ReplaceAllString(s, "\\textsf{$1}")
+		return s
+	})
+
 	return a
 }
 
@@ -50,7 +62,7 @@ func instSize(list []string, abbr string) int {
 func GetTemplate() *template.Template {
 
 	funcMap := template.FuncMap{
-		"expandEOL": expandEOL,
+		"expand": expand,
 		"anchor":    anchor,
 		"instSize":  instSize,
 	}
@@ -141,9 +153,9 @@ const theTemplate = `
   ##- if eq .Source "EMPTYLINE" ##
   \postlevel
   ##- else ##
-	\mess[## .Delay ##]{## .Source ##}{## expandEOL .Label ##}{## .Destination ##}
-	\node [anchor=## anchor $actorList .Source .Destination "from"  ##] at (mess from) {## expandEOL .AnnotationFrom ##};
-	\node [anchor=## anchor $actorList .Source .Destination "to"  ##] at (mess to) {## expandEOL .AnnotationTo ##};
+	\mess[## .Delay ##]{## .Source ##}{## expand .Label ##}{## .Destination ##}
+	\node [anchor=## anchor $actorList .Source .Destination "from"  ##] at (mess from) {## expand .AnnotationFrom ##};
+	\node [anchor=## anchor $actorList .Source .Destination "to"  ##] at (mess to) {## expand .AnnotationTo ##};
   ##- end ##
 
 	##- end##
