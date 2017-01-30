@@ -22,6 +22,7 @@ func expand(a string) string {
 		s = re2.ReplaceAllString(s, "\\mathsf{$1}")
 		s = strings.Replace(s, "<-", `\gets`, -1)
 		s = strings.Replace(s, "->", `\to`, -1)
+		s = strings.Replace(s, "||", `\Vert `, -1)
 		return s
 	})
 
