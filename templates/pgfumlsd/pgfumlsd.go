@@ -2,23 +2,23 @@ package pgfumlsd
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"text/template"
-	"regexp"
 )
 
 func expand(a string) string {
 
 	// expand EOL to \n and shortstack
 	if strings.Contains(a, "\n") {
-		a = fmt.Sprintf("\\shortstack{%s}", strings.Replace(a, "\n", "\\\\", -1))
+		a = fmt.Sprintf("\\shortstack[l]{%s}", strings.Replace(a, "\n", "\\\\", -1))
 	}
 
 	// expand $ `...` $ to $ \textsf{...}
 	re := regexp.MustCompile("[$][^$]*[$]")
-	a = re.ReplaceAllStringFunc(a, func (s string) string {
+	a = re.ReplaceAllStringFunc(a, func(s string) string {
 		re2 := regexp.MustCompile("[`]([^`]*)[`]")
-		s = re2.ReplaceAllString(s, "\\textsf{$1}")
+		s = re2.ReplaceAllString(s, "\\mathsf{$1}")
 		return s
 	})
 
@@ -62,9 +62,9 @@ func instSize(list []string, abbr string) int {
 func GetTemplate() *template.Template {
 
 	funcMap := template.FuncMap{
-		"expand": expand,
-		"anchor":    anchor,
-		"instSize":  instSize,
+		"expand":   expand,
+		"anchor":   anchor,
+		"instSize": instSize,
 	}
 
 	return template.Must(template.New("pgfumlsd").Funcs(funcMap).Delims("##", "##").Parse(theTemplate))
