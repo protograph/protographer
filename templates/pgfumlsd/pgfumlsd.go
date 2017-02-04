@@ -54,6 +54,22 @@ func anchor(list []string, src, dst, fromOrTo string) string {
 
 }
 
+func arrowStyle(color, style string ) string {
+
+	result := "black"
+	if color != "" {
+		result = color
+	}
+
+	if style != "" {
+		result += "," + style
+	} else {
+		result += ",->"
+	}
+
+	return result
+}
+
 func instSize(list []string, abbr string) int {
 
 	if list[0] == abbr {
@@ -69,6 +85,7 @@ func GetTemplate() *template.Template {
 		"expand":   expand,
 		"anchor":   anchor,
 		"instSize": instSize,
+		"arrowStyle": arrowStyle,
 	}
 
 	return template.Must(template.New("pgfumlsd").Funcs(funcMap).Delims("##", "##").Parse(theTemplate))
@@ -87,35 +104,16 @@ const theTemplate = `
 \usetikzlibrary{shadows,positioning}
 \tikzset{every shadow/.style={fill=none,shadow xshift=0pt,shadow yshift=0pt}}
 
-%% Redefine mess and messanother to avoid the macro create node with non-trival label
-\newcommand*{\messanother}[4][0]{
-   \stepcounter{seqlevel}
-   \path
-   (#2)+(0,-\theseqlevel*\unitfactor-0.7*\unitfactor) node (mess from) {};
-   \addtocounter{seqlevel}{#1}
-   \path
-   (#4)+(0,-\theseqlevel*\unitfactor-0.7*\unitfactor) node (mess to) {};
-   \draw[->,>=angle 60] (mess from) -- (mess to) node[midway, above]
-   {#3};
-	 %% comment out the problematic node creation here.
-   % \node (#3 from) at (mess from) {};
-   % \node (#3 to) at (mess to) {};
-}
-
-\renewcommand{\mess}[4][0]{
-    \ifthenelse{\equal{#2}{#4}}
-    {
-        \ifthenelse{\equal{#1}{0}}
-        {
-          \messself[1]{#2}{#3}
-        }
-        {
-        \messself[#1]{#2}{#3}
-        }
-    }
-    {
-      \messanother[#1]{#2}{#3}{#4}
-    }
+%% Redefine mess for node with non-trival label, add support arrow shape
+\renewcommand{\mess}[5][0]{
+  \stepcounter{seqlevel}
+  \path
+  (#2)+(0,-\theseqlevel*\unitfactor-0.7*\unitfactor) node (mess from) {};
+  \addtocounter{seqlevel}{#1}
+  \path
+  (#4)+(0,-\theseqlevel*\unitfactor-0.7*\unitfactor) node (mess to) {};
+  \draw[#5,>=angle 60] (mess from) -- (mess to) node[midway, above]
+  {#3};
 }
 ##- end ##
 
@@ -157,7 +155,7 @@ const theTemplate = `
   ##- if eq .Source "EMPTYLINE" ##
   \postlevel
   ##- else ##
-	\mess[## .Delay ##]{## .Source ##}{## expand .Label ##}{## .Destination ##}
+	\mess[## .Delay ##]{## .Source ##}{## expand .Label ##}{## .Destination ##}{## arrowStyle .Color .Style ##}
 	\node [anchor=## anchor $actorList .Source .Destination "from"  ##] at (mess from) {## expand .AnnotationFrom ##};
 	\node [anchor=## anchor $actorList .Source .Destination "to"  ##] at (mess to) {## expand .AnnotationTo ##};
   ##- end ##

@@ -32,6 +32,8 @@ type Sequence struct {
 	AnnotationFrom string
 	AnnotationTo   string
 	Delay          int
+	Color          string
+	Style          string
 }
 
 // New creates a protogrph
@@ -70,6 +72,12 @@ func New(y *ProtographYAML) *Protograph {
 					}
 					if s, ok := v3["time"].(int); ok {
 						p.Sequence[i].Delay = s
+					}
+					if s, ok := v3["color"].(string); ok {
+						p.Sequence[i].Color = s
+					}
+					if s, ok := v3["style"].(string); ok {
+						p.Sequence[i].Style = s
 					}
 				case string:
 					p.Sequence[i].Label = v3
