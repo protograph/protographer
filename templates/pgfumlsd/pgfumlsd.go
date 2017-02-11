@@ -54,7 +54,7 @@ func anchor(list []string, src, dst, fromOrTo string) string {
 
 }
 
-func arrowStyle(color, style string ) string {
+func arrowStyle(color, style string) string {
 
 	result := "black"
 	if color != "" {
@@ -82,9 +82,9 @@ func instSize(list []string, abbr string) int {
 func GetTemplate() *template.Template {
 
 	funcMap := template.FuncMap{
-		"expand":   expand,
-		"anchor":   anchor,
-		"instSize": instSize,
+		"expand":     expand,
+		"anchor":     anchor,
+		"instSize":   instSize,
 		"arrowStyle": arrowStyle,
 	}
 
@@ -101,6 +101,7 @@ const theTemplate = `
 \usepackage[underline=false,roundedcorners=true]{pgf-umlsd}
 \usepackage{underscore}
 \usepackage{syntax}
+\usepackage{hyperref}
 \usetikzlibrary{shadows,positioning}
 \tikzset{every shadow/.style={fill=none,shadow xshift=0pt,shadow yshift=0pt}}
 
