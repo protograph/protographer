@@ -1,10 +1,11 @@
 package protographer
 
 import (
-	"testing"
-	"gopkg.in/yaml.v2"
 	"bytes"
 	"strings"
+	"testing"
+
+	"gopkg.in/yaml.v2"
 )
 
 const backtickvar = "`aaa`"
@@ -25,7 +26,6 @@ sequence:
 
 func TestGeneratePGFUMLSD(t *testing.T) {
 
-
 	data := ProtographYAML{}
 
 	var b bytes.Buffer
@@ -42,8 +42,8 @@ func TestGeneratePGFUMLSD(t *testing.T) {
 
 	t.Log(b.String())
 
-	if ! strings.HasSuffix(strings.TrimSpace(b.String()), expected) {
-		t.Errorf("Generated output does not contain %s: Got %s", expected, b.String() )
+	if !strings.HasSuffix(strings.TrimSpace(b.String()), expected) {
+		t.Errorf("Generated output does not contain %s: Got %s", expected, b.String())
 	}
 
 }
