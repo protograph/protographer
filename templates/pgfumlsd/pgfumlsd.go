@@ -1,94 +1,94 @@
 package pgfumlsd
 
 import (
-    "fmt"
-    "regexp"
-    "strings"
-    "text/template"
+	"fmt"
+	"regexp"
+	"strings"
+	"text/template"
 )
 
 func expand(a string) string {
 
-    a = strings.TrimSpace(a)
-    // expand EOL to \n and shortstack
-    if strings.Contains(a, "\n") {
-        a = fmt.Sprintf("\\shortstack[l]{%s}", strings.Replace(a, "\n", "\\\\", -1))
-    }
+	a = strings.TrimSpace(a)
+	// expand EOL to \n and shortstack
+	if strings.Contains(a, "\n") {
+		a = fmt.Sprintf("\\shortstack[l]{%s}", strings.Replace(a, "\n", "\\\\", -1))
+	}
 
-    // expand $ `...` $ to $ \textsf{...}
-    re := regexp.MustCompile("[$][^$]*[$]")
-    a = re.ReplaceAllStringFunc(a, func(s string) string {
-        re2 := regexp.MustCompile("[`]([^`]*)[`]")
-        s = re2.ReplaceAllString(s, "\\mathsf{$1}")
-        s = strings.Replace(s, "<-", `\gets`, -1)
-        s = strings.Replace(s, "->", `\to`, -1)
-        s = strings.Replace(s, "||", `\Vert `, -1)
-        return s
-    })
+	// expand $ `...` $ to $ \textsf{...}
+	re := regexp.MustCompile("[$][^$]*[$]")
+	a = re.ReplaceAllStringFunc(a, func(s string) string {
+		re2 := regexp.MustCompile("[`]([^`]*)[`]")
+		s = re2.ReplaceAllString(s, "\\mathsf{$1}")
+		s = strings.Replace(s, "<-", `\gets`, -1)
+		s = strings.Replace(s, "->", `\to`, -1)
+		s = strings.Replace(s, "||", `\Vert `, -1)
+		return s
+	})
 
-    return a
+	return a
 }
 
 func anchor(list []string, src, dst, fromOrTo string) string {
 
-    for _, v := range list {
-        if v == src {
-            switch fromOrTo {
-            case "from":
-                return "east"
-            default:
-                return "west"
-            }
-        }
-        if v == dst {
-            switch fromOrTo {
-            case "from":
-                return "west"
-            default:
-                return "east"
-            }
-        }
-    }
+	for _, v := range list {
+		if v == src {
+			switch fromOrTo {
+			case "from":
+				return "east"
+			default:
+				return "west"
+			}
+		}
+		if v == dst {
+			switch fromOrTo {
+			case "from":
+				return "west"
+			default:
+				return "east"
+			}
+		}
+	}
 
-    return "east"
+	return "east"
 
 }
 
 func arrowStyle(color, style string) string {
 
-    result := "black"
-    if color != "" {
-        result = color
-    }
+	result := "black"
+	if color != "" {
+		result = color
+	}
 
-    if style != "" {
-        result += "," + style
-    } else {
-        result += ",->"
-    }
+	if style != "" {
+		result += "," + style
+	} else {
+		result += ",->"
+	}
 
-    return result
+	return result
 }
 
 func instSize(list []string, abbr string) int {
 
-    if list[0] == abbr {
-        return 0
-    }
-    return 6
+	if list[0] == abbr {
+		return 0
+	}
+	return 6
 }
 
 // GetTemplate return a parsed template
 func GetTemplate() *template.Template {
 
-    funcMap := template.FuncMap{
-        "expand":     expand,
-        "anchor":     anchor,
-        "instSize":   instSize,
-        "arrowStyle": arrowStyle,
-    }
+	funcMap := template.FuncMap{
+		"expand":     expand,
+		"anchor":     anchor,
+		"instSize":   instSize,
+		"arrowStyle": arrowStyle,
+	}
 
-    return template.Must(template.New("pgfumlsd").Funcs(funcMap).Delims("##", "##").Parse(theTemplate))
+	return template.Must(template.New("pgfumlsd").Funcs(funcMap).Delims("##", "##").Parse(theTemplate))
 
 }
 
