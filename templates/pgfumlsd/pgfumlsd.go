@@ -142,7 +142,7 @@ const theTemplate = `
       ##- end ##
     ##- end##
     ##- if .FootNote ##
-\node [anchor=north west] at ([yshift=-20] current bounding box.south west){## .FootNote ##};
+\node [anchor=north west] at ([yshift=-20] current bounding box.south west){## expand .FootNote ##};
     ##- end##
 ##- end ##
 `
