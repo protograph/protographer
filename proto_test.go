@@ -25,25 +25,17 @@ sequence:
 `
 
 func TestGeneratePGFUMLSD(t *testing.T) {
-
 	data := ProtographYAML{}
-
 	var b bytes.Buffer
-
 	expected := `\end{document}`
-
 	err := yaml.Unmarshal([]byte(content), &data)
 	if err != nil {
 		t.Error(err)
 	}
-
 	p := New(&data)
 	p.GeneratePGFUMLSD(&b)
-
 	t.Log(b.String())
-
 	if !strings.HasSuffix(strings.TrimSpace(b.String()), expected) {
 		t.Errorf("Generated output does not contain %s: Got %s", expected, b.String())
 	}
-
 }

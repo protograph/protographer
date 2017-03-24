@@ -40,9 +40,7 @@ type Sequence struct {
 
 // New creates a protogrph
 func New(y *ProtographYAML) *Protograph {
-
 	p := Protograph{}
-
 	p.Title = y.Title
 	p.FootNote = y.FootNote
 	p.Actor = y.Actor
@@ -55,9 +53,7 @@ func New(y *ProtographYAML) *Protograph {
 	}
 
 	p.Sequence = make([]Sequence, len(y.Sequence))
-
 	for i, s := range y.Sequence {
-
 		for k, v := range s {
 			p.Sequence[i].Source = k
 			for k2, v2 := range v {
@@ -90,20 +86,15 @@ func New(y *ProtographYAML) *Protograph {
 					fmt.Println("unknown type")
 					fmt.Println(reflect.TypeOf(v3))
 				}
-
 				break
 			}
 			break
 		}
-
 	}
-
 	return &p
 }
 
 // GeneratePGFUMLSD generates the pgf umlsd output
 func (p *Protograph) GeneratePGFUMLSD(wr io.Writer) {
-
 	pgfumlsd.GetTemplate().Execute(wr, p)
-
 }

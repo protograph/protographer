@@ -8,7 +8,6 @@ import (
 )
 
 func expand(a string) string {
-
 	a = strings.TrimSpace(a)
 	// expand EOL to \n and shortstack
 	if strings.Contains(a, "\n") {
@@ -25,12 +24,10 @@ func expand(a string) string {
 		s = strings.Replace(s, "||", `\Vert `, -1)
 		return s
 	})
-
 	return a
 }
 
 func anchor(list []string, src, dst, fromOrTo string) string {
-
 	for _, v := range list {
 		if v == src {
 			switch fromOrTo {
@@ -49,29 +46,23 @@ func anchor(list []string, src, dst, fromOrTo string) string {
 			}
 		}
 	}
-
 	return "east"
-
 }
 
 func arrowStyle(color, style string) string {
-
 	result := "black"
 	if color != "" {
 		result = color
 	}
-
 	if style != "" {
 		result += "," + style
 	} else {
 		result += ",->"
 	}
-
 	return result
 }
 
 func instSize(list []string, abbr string) int {
-
 	if list[0] == abbr {
 		return 0
 	}
@@ -80,14 +71,12 @@ func instSize(list []string, abbr string) int {
 
 // GetTemplate return a parsed template
 func GetTemplate() *template.Template {
-
 	funcMap := template.FuncMap{
 		"expand":     expand,
 		"anchor":     anchor,
 		"instSize":   instSize,
 		"arrowStyle": arrowStyle,
 	}
-
 	return template.Must(template.New("pgfumlsd").Funcs(funcMap).Delims("##", "##").Parse(theTemplate))
 
 }

@@ -6,47 +6,53 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/protograph/protographer"
 	"gopkg.in/yaml.v2"
+	"path/filepath"
 )
 
 var (
-	inDir  = flag.String("in", "yaml", "input directory")
-	outDir = flag.String("out", "tex", "output directory")
+	outDir = flag.String("outdir", "tex", "output directory")
 )
 
 func main() {
-
-	flag.Parse()
-
-	files, _ := ioutil.ReadDir(*inDir)
-
-	for _, file := range files {
-
-		if file.IsDir() {
-			continue
-		}
-
-		pcs := strings.Split(file.Name(), ".")
-		baseName := strings.Join(pcs[:len(pcs)-1], ".")
-
-		content, _ := ioutil.ReadFile(*inDir + "/" + file.Name())
-
-		data := protographer.ProtographYAML{}
-
-		err := yaml.Unmarshal([]byte(content), &data)
-		if err != nil {
-			log.Printf("error: %v\n", err)
-		}
-
-		p := protographer.New(&data)
-
-		fmt.Printf("Converting %s to TeX with PGF-UMLSD.\n", file.Name())
-		out, _ := os.Create(*outDir + "/" + baseName + ".tex")
-		defer out.Close()
-
-		p.GeneratePGFUMLSD(out)
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage of %s [OPTIONS] YAML-FILENAME:\n", os.Args[0])
+		flag.PrintDefaults()
 	}
+	flag.Parse()
+	filePath := flag.Arg(0)
+	if filePath == "" {
+		flag.Usage()
+		os.Exit(1)
+	}
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		panic(fmt.Errorf("error opening %s: %s", filePath, err))
+	}
+	err = genTex(filePath, content)
+	if err != nil {
+		panic(fmt.Errorf("error generating tex %s: %s", filePath, err))
+	}
+}
+
+func genTex(fileName string, content []byte) error {
+	fName := filepath.Base(fileName)
+	base := fName[:len(fName)-len(filepath.Ext(fName))]
+	outFile := *outDir + "/" + base + ".tex"
+	data := protographer.ProtographYAML{}
+	err := yaml.Unmarshal([]byte(content), &data)
+	if err != nil {
+		log.Printf("error: %v\n", err)
+	}
+	p := protographer.New(&data)
+	fmt.Printf("Converting %s to %s with PGF-UMLSD.\n", fileName, outFile)
+	out, err := os.Create(outFile)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	p.GeneratePGFUMLSD(out)
+	return nil
 }
