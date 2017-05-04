@@ -2,6 +2,9 @@ title: Hello World
 
 footnote: this is a sample footnote
 
+# separation width between entities
+separation: 12
+
 actor:
 - A: Alice
 - B: Bob

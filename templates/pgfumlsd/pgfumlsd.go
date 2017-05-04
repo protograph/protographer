@@ -62,11 +62,16 @@ func arrowStyle(color, style string) string {
 	return result
 }
 
-func instSize(list []string, abbr string) int {
+const DEFAULT_SEPARATION = 6
+
+func instSize(list []string, abbr string, separation int) int {
 	if list[0] == abbr {
 		return 0
 	}
-	return 6
+	if separation == 0 {
+		return DEFAULT_SEPARATION
+	}
+	return separation
 }
 
 // GetTemplate return a parsed template
@@ -91,6 +96,7 @@ const theTemplate = `
 \usepackage{underscore}
 \usepackage{syntax}
 \usepackage{hyperref}
+\usepackage{amsmath}
 \usetikzlibrary{shadows,positioning}
 \tikzset{every shadow/.style={fill=none,shadow xshift=0pt,shadow yshift=0pt}}
 
@@ -121,10 +127,12 @@ const theTemplate = `
 ##- end ##
 
 ##- define "actors" ##
+
+	##- $separation := .Separation ##
     ##- $actorList := .ActorList ##
     ##- range $idx, $actor := .Actor ##
         ##- range $abbr, $name := $actor ##
-\newinst[## instSize $actorList $abbr ##]{##$abbr##}{##$name##}
+\newinst[## instSize $actorList $abbr $separation ##]{##$abbr##}{##$name##}
         ##- end ##
     ##- end ##
 ##- end ##

@@ -11,19 +11,21 @@ import (
 
 // ProtographYAML is the YAML format of a protograph description.
 type ProtographYAML struct {
-	Title    string                              //
-	FootNote string                              //
-	Actor    []map[string]string                 //
-	Sequence []map[string]map[string]interface{} // Sequence is an array of this form (Src: { Dst: Label })
+	Title      string                              //
+	FootNote   string                              //
+	Actor      []map[string]string                 //
+	Sequence   []map[string]map[string]interface{} // Sequence is an array of this form (Src: { Dst: Label })
+	Separation int                                 //
 }
 
 // Protograph is the parsed format of a protograph description.
 type Protograph struct {
-	Title     string              //
-	FootNote  string              //
-	Actor     []map[string]string //
-	ActorList []string            // abbreviated names, ordered.
-	Sequence  []Sequence
+	Title      string              //
+	FootNote   string              //
+	Actor      []map[string]string //
+	ActorList  []string            // abbreviated names, ordered.
+	Sequence   []Sequence          //
+	Separation int                 //
 }
 
 // Sequence denotes a source to destination and the annotations.
@@ -45,6 +47,7 @@ func New(y *ProtographYAML) *Protograph {
 	p.FootNote = y.FootNote
 	p.Actor = y.Actor
 	p.ActorList = make([]string, len(y.Actor))
+	p.Separation = y.Separation
 	for i, a := range y.Actor {
 		for k := range a {
 			p.ActorList[i] = k
