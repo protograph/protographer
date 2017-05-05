@@ -19,6 +19,7 @@ func expand(a string) string {
 	a = re.ReplaceAllStringFunc(a, func(s string) string {
 		re2 := regexp.MustCompile("[`]([^`]*)[`]")
 		s = re2.ReplaceAllString(s, "\\mathsf{$1}")
+		s = strings.Replace(s, "'", `\textnormal{\textquotesingle}`, -1)
 		s = strings.Replace(s, "<-", `\gets`, -1)
 		s = strings.Replace(s, "->", `\to`, -1)
 		s = strings.Replace(s, "||", `\Vert `, -1)
@@ -98,6 +99,9 @@ const theTemplate = `
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{textcomp}
+
 \usetikzlibrary{shadows,positioning}
 \tikzset{every shadow/.style={fill=none,shadow xshift=0pt,shadow yshift=0pt}}
 
