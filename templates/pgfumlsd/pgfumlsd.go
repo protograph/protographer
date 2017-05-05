@@ -97,6 +97,7 @@ const theTemplate = `
 \usepackage{syntax}
 \usepackage{hyperref}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usetikzlibrary{shadows,positioning}
 \tikzset{every shadow/.style={fill=none,shadow xshift=0pt,shadow yshift=0pt}}
 
